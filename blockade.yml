@@ -1,0 +1,7 @@
+containers:
+ zk1:
+  image: viotti/zk:v1
+ zk2:
+  image: viotti/zk:v1
+ zk3:
+  image: viotti/zk:v1
