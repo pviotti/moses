@@ -15,7 +15,7 @@ done
 end=$(( ${#ips[@]} - 1 ))
 for i in $(seq 0 $end)
 do
-    sshpass -p 'root' scp -o StrictHostKeyChecking=no zoo.cfg root@${ips[$i]}:/opt/zookeeper/conf/
-    sshpass -p 'root' ssh -o StrictHostKeyChecking=no root@${ips[$i]} "echo $(( $i + 1 )) > /tmp/zookeeper/myid"
-    sshpass -p 'root' ssh -o StrictHostKeyChecking=no root@${ips[$i]} "/opt/zookeeper/bin/zkServer.sh start"
+    sshpass -p 'root' scp -o StrictHostKeyChecking=no zoo.cfg root@${ips[$i]}:/opt/zookeeper/conf/ 2>/dev/null
+    sshpass -p 'root' ssh -o StrictHostKeyChecking=no root@${ips[$i]} "echo $(( $i + 1 )) > /tmp/zookeeper/myid" 2>/dev/null
+    sshpass -p 'root' ssh -o StrictHostKeyChecking=no root@${ips[$i]} "/opt/zookeeper/bin/zkServer.sh start" 2>/dev/null
 done
