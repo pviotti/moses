@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # Simple tool to perform concurrency tests on
 # Zookpeer.
 # @author: Paolo
@@ -6,7 +6,7 @@
 
 import random, string, time
 from kazoo.client import KazooClient, KazooState
-import concurrent.futures
+from multiprocessing.pool import ThreadPool
 
 DEBUG = True 
 
@@ -20,27 +20,28 @@ test_db = {}
 
 def state_listener(state):
     if state == KazooState.LOST:
-        print("State: LOST")
+        print "State: LOST"
     elif state == KazooState.SUSPENDED:
-        print("State: SUSPENDED")
+        print "State: SUSPENDED"
     else:
-        print("State: CONNECTED")
+        print "State: CONNECTED"
 
 zk = KazooClient(servers)
 zk.add_listener(state_listener)
 zk.start()
 
 def test():
-    print("ZK concurrency test")
+    print "ZK concurrency test"
     tst_conc()
     tst_get()
-    print("OK.")
+    print "OK."
 
 def tst_conc():
-    e = concurrent.futures.ThreadPoolExecutor(num_write)
+    e = ThreadPool(num_write)
     for i in e.map(_issue_set, range(1, num_write+1)):
         pass
-    e.shutdown(wait=True)
+    e.close()
+    e.join()
 
 def tst_get():
     for key in test_db.keys():
@@ -63,7 +64,7 @@ def _issue_set(x):
 
 def _print(str):
     if DEBUG:
-        print(str)
+        print str
 
 
 if __name__=="__main__":

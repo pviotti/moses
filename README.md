@@ -15,7 +15,7 @@ Type of machine: small
     sudo echo LANGUAGE=en_GB.UTF-8 >> /etc/environment
     sudo echo LC_ALL=en_GB.UTF-8 >> /etc/environment
     sudo apt-get install zsh tshark git lxctl lxc python-pip sshpass ipython \
-      python3-kazoo
+      python-kazoo
 
 
 Zsh

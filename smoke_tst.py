@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # Simple tool to perform smoke tests on
 # Zookeeper during partitions.
 # @author: Paolo
@@ -20,24 +20,24 @@ test_db = {}
 
 def state_listener(state):
     if state == KazooState.LOST:
-        print("State: LOST")
+        print "State: LOST"
     elif state == KazooState.SUSPENDED:
-        print("State: SUSPENDED")
+        print "State: SUSPENDED"
     else:
-        print("State: CONNECTED")
+        print "State: CONNECTED" 
 
 zk = KazooClient(servers)
 zk.add_listener(state_listener)
 zk.start()
 
 def test():
-    print("ZK partition smoke test")
+    print "ZK partition smoke test"
     tst_set()
     tst_get()
     #tst_list()
     #tst_delete()
     #tst_writeread()
-    print("OK.")
+    print "OK."
 
 def tst_set():
     for i in range(1, num_write+1):
@@ -86,7 +86,7 @@ def tst_writeread():
 
 def _print(str):
     if DEBUG:
-        print(str)
+        print str
 
 
 if __name__=="__main__":
