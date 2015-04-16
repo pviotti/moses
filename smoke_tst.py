@@ -4,17 +4,28 @@
 # @author: Paolo
 # @date: 16/4/2015
 
+from multiprocessing.pool import ThreadPool
 import random, string, time
+import subprocess as subp
+
 from kazoo.client import KazooClient, KazooState
+from blockade import cli
 
 DEBUG = True 
 
-servers = "localhost:2181,localhost:2182,localhost:2183"
+# string of Zk server addresses
+servers = ""
+# Kazoo Zk clients
+clients = []
 
-num_write = 50
+num_write = 100
 key_len = 10
-max_value = 10000
-num_delete = 10
+value_len = 2
+
+num_clients = 10
+num_thread = num_clients
+
+test_root = "/tst/"
 
 test_db = {}
 
@@ -26,62 +37,78 @@ def state_listener(state):
     else:
         print "State: CONNECTED" 
 
-zk = KazooClient(servers)
-zk.add_listener(state_listener)
-zk.start()
 
 def test():
-    print "ZK partition smoke test"
-    tst_set()
-    tst_get()
-    #tst_list()
-    #tst_delete()
-    #tst_writeread()
+    print "ZK partition test"
+    setup_servers()
+    get_servers_addrs()
+    setup_clients()
+    write()
+    read()
+    shutdown()
     print "OK."
 
-def tst_set():
+def setup_clients():
+    global clients 
+    for i in range(0,num_clients):
+        zk = KazooClient(servers)
+        zk.add_listener(state_listener)
+        zk.start()
+        clients.append(zk)
+    clients[0].ensure_path(test_root)
+    
+def get_servers_addrs():
+    parser = cli.setup_parser()
+    opts = parser.parse_args(args=["status"])
+    config = cli.load_config(opts)
+    b = cli.get_blockade(config)
+    containers = b.status()
+    
+    global servers
+    for c in containers:
+        servers += c.ip_address
+        servers += ":2181,"
+    
+def setup_servers():
+    # Blockade up
+    parser = cli.setup_parser()
+    opts = parser.parse_args(args=["up"])
+    cli.cmd_up(opts)
+    
+    # Zk start
+    subp.call(["./zk_start.sh"])
+    
+def shutdown():
+    # Blocakde destroy
+    parser = cli.setup_parser()
+    opts = parser.parse_args(args=["destroy"])
+    cli.cmd_destroy(opts)
+    
+def write():
+    p = ThreadPool(num_write)
+    for i in p.map(_issue_writes, clients):
+        pass
+    p.close()
+    p.join()
+    
+
+def _issue_writes(zkc):
     for i in range(1, num_write+1):
-        key = "/" + ''.join(random.choice(string.ascii_letters) for i in range(key_len))
-        value = ''.join(random.choice(string.ascii_letters) for i in range(key_len))
+        key = test_root + ''.join(random.choice(string.ascii_letters) for i in range(key_len))
+        value = ''.join(random.choice(string.ascii_letters) for i in range(value_len))
         test_db[key] = value.encode()
-        cmd = "S " + key + " " + str(value)
-        _print(cmd)
-        ret = zk.create(key, value.encode())
+        #cmd = "S " + key + " " + str(value)
+        #_print(cmd)
+        ret = zkc.create(key, value.encode())
         assert ret == key
 
-def tst_get():
+def read():
     for key in test_db.keys():
         cmd = "G " + key
         _print(cmd)
-        data, stat = zk.get(key)
+        data, stat = clients[0].get(key)
         _print("R: " + str(data))
         assert data == test_db[key]
-
-def tst_list():
-    for server in servers:
-        cmd = "L"
-        #ret = str(_send_recv(server, cmd))
-        _print(ret)
-        assert len(ret) > 0
-        for key in test_db.keys():
-            assert ret.find(key) != -1
-
-
-def tst_writeread():
-    for i in range(1, num_write+1):
-        key = ''.join(random.choice(string.ascii_letters) for i in range(key_len))
-        value = random.randint(0,max_value)
-        cmd = "S " + key + " " + str(value)
-        _print(cmd)
-        #ret = _send_recv(random.choice(servers), cmd)
-        assert ret == b'A'
-        _print("R: " + str(ret))
-        
-        cmd = "G " + key
-        _print(cmd)
-        #ret = _send_recv(random.choice(servers), cmd)
-        _print("R: " + str(ret))
-        assert int(ret) == value
         
 
 def _print(str):
