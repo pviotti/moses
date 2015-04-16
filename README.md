@@ -14,7 +14,8 @@ Type of machine: small
     sudo locale-gen en_GB.UTF-8
     sudo echo LANGUAGE=en_GB.UTF-8 >> /etc/environment
     sudo echo LC_ALL=en_GB.UTF-8 >> /etc/environment
-    sudo apt-get install zsh tshark git lxctl lxc python-pip sshpass
+    sudo apt-get install zsh tshark git lxctl lxc python-pip sshpass ipython \
+      python3-kazoo
 
 
 Zsh
@@ -43,7 +44,7 @@ Final check
     sudo blockade -h
     
 
-## Create containers
+## Containers setup
 
 Docker commands
 
