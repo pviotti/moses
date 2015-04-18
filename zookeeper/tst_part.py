@@ -13,7 +13,8 @@ from kazoo.client import KazooClient, KazooState
 from blockade import cli as block
 
 import logging
-logging.basicConfig(level=logging.DEBUG) 
+logging.basicConfig(level=logging.INFO) 
+logging.getLogger("kazoo.client").setLevel(logging.ERROR)
 
 servers = ""    # string of Zk server addresses
 clients = []    # Kazoo Zk clients
@@ -32,7 +33,7 @@ lock = RLock()
 
 
 def test():
-    logger.info("ZK partition test.")
+    logging.info("ZK partition test.")
     try:
         setup_servers()
         get_servers_addrs()
@@ -43,7 +44,7 @@ def test():
         shutdown()
         
 def setup_servers():
-    logger.info("Setup servers...")
+    logging.info("Setup servers...")
     # Blockade up
     parser = block.setup_parser()
     opts = parser.parse_args(args=["up"])
@@ -66,14 +67,14 @@ def get_servers_addrs():
     servers.strip(",")
 
 def setup_clients():
-    logger.info("Setup clients...")
+    logging.info("Setup clients...")
     global clients 
     for i in range(0, num_clients):
         zk = KazooClient(servers)
         zk.add_listener(state_listener)
         zk.start()
         clients.append(zk)
-        logger.info("Client " + i + " connected to: " + zk._connection._socket.getpeername()[0])
+        logging.info("Client " + str(i) + " connected to: " + zk._connection._socket.getpeername()[0])
     clients[0].ensure_path(test_root)   # Create test path
     
 def write():
