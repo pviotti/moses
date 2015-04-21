@@ -5,3 +5,7 @@ containers:
   image: viotti/zk:v1
  zk3:
   image: viotti/zk:v1
+ zk4:
+  image: viotti/zk:v1
+ zk5:
+  image: viotti/zk:v1

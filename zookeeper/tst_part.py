@@ -18,6 +18,7 @@ logging.getLogger("kazoo.client").setLevel(logging.ERROR)
 
 servers = ""    # string of Zk server addresses
 clients = []    # Kazoo Zk clients
+num_servers = 0
 
 num_write = 100
 key_len = 10
@@ -61,9 +62,11 @@ def get_servers_addrs():
     containers = b.status()
     
     global servers
+    global num_servers
     for c in containers:
         servers += c.ip_address
         servers += ":2181,"
+        num_servers += 1
     servers.strip(",")
 
 def setup_clients():
@@ -81,7 +84,8 @@ def write():
     p = ThreadPool(num_write)
 
     # partition one random server from the others
-    partition(random.choice(["zk1","zk2","zk3"]))
+    partition("zk" + str(random.randint(1,num_servers)) + "," +
+             "zk" + str(random.randint(1,num_servers)) )
     
     # print partition status
     parser = block.setup_parser()

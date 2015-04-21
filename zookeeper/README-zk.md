@@ -12,7 +12,7 @@ Type of machine on the Bigfoot: small.
     sudo locale-gen en_GB.UTF-8
     sudo echo LANGUAGE=en_GB.UTF-8 >> /etc/environment
     sudo echo LC_ALL=en_GB.UTF-8 >> /etc/environment
-    sudo apt-get install zsh tshark git lxctl lxc python-pip sshpass ipython \
+    sudo apt-get install zsh htop tshark git lxctl lxc python-pip sshpass ipython \
       python-kazoo
     sudo chsh ubuntu -s /bin/zsh
 
