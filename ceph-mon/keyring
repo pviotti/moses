@@ -1,0 +1,8 @@
+[mon.]
+	key = AQBZFjlVlatPGBAAiKDzZFmUPrgo0TUM/oUTLQ==
+[client.admin]
+	key = AQBZFjlVDOLKFxAALtGZkLdpXSNEf98K9K0+Hg==
+	auid = 1000
+	caps mds = "allow *"
+	caps mon = "allow *"
+	caps osd = "allow *"

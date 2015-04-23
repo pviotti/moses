@@ -1,0 +1,7 @@
+containers:
+ ceph1:
+  image: viotti/ceph:v1
+ ceph2:
+  image: viotti/ceph:v1
+ ceph3:
+  image: viotti/ceph:v1

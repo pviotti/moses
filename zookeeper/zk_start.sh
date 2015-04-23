@@ -11,8 +11,6 @@ do
 	sed -i "s/zk$i/${ips[$i]}/g" zoo.cfg
 done
 
-
-end=$(( ${#ips[@]} - 1 ))
 for i in $(seq 0 $end)
 do
     sshpass -p 'root' scp -o StrictHostKeyChecking=no zoo.cfg root@${ips[$i]}:/opt/zookeeper/conf/ 2>/dev/null
