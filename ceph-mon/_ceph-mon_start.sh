@@ -1,6 +1,6 @@
 #!/bin/bash
 
-kill $(pgrep ceph-mon)
+#kill $(pgrep ceph-mon)
 
 rm -rf test
 mkdir -p test

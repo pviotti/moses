@@ -5,14 +5,12 @@ Testing Zookeeper 3.4.6 against network faults.
 
 ## Containers setup
 
-Docker commands
+Docker image setup: 
 
-    docker ps
     docker build -t viotti/zk:v1 .
-    docker images
     
-Blockade
+Blockade setup:
 
     blockade up
     ./zk_start.sh
-    ./zk_watch.sh
+    ./zk_watch.sh # watch cluster status using four letters Zk commands

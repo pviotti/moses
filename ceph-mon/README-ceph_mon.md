@@ -5,14 +5,12 @@ in-memory key-value store against network faults.
 
 ## Containers setup
 
-Docker commands
+Docker image setup: 
 
-    docker ps
     docker build -t viotti/ceph:v1 .
-    docker images
     
 Blockade
 
     blockade up
     ./ceph_start.sh
-    ./ceph_watch.sh
+    ./ceph_watch.sh # issue mon_status command

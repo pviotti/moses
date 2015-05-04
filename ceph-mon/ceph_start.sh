@@ -2,7 +2,6 @@
 
 read -d '' -r -a ips <<<`sudo blockade status | tr -s " " | cut -d " " -f4 | tail -n +2`
 
-rm -rf ceph-mon_start.sh
 cp _ceph-mon_start.sh ceph-mon_start.sh
 
 end=$(( ${#ips[@]} - 1 ))

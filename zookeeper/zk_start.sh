@@ -2,7 +2,6 @@
 
 read -d '' -r -a ips <<<`sudo blockade status | tr -s " " | cut -d " " -f4 | tail -n +2`
 
-rm -rf zoo.cfg
 cp _zoo.cfg zoo.cfg
 
 end=$(( ${#ips[@]} - 1 ))
