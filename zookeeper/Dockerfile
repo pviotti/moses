@@ -1,16 +1,17 @@
 # DOCKER-VERSION 1.5.0
 # VERSION        0.1
 
-FROM debian:jessie
+FROM ubuntu:15.04
 MAINTAINER PV <viotti@eurecom.fr>
 
-ENV ZK_VERSION 3.4.6
-
-RUN apt-get update && apt-get install -y openjdk-7-jre-headless wget openssh-server
-RUN wget -q -O - http://apache.mirrors.pair.com/zookeeper/zookeeper-$ZK_VERSION/zookeeper-$ZK_VERSION.tar.gz | tar -xzf - -C /opt \
-    && mv /opt/zookeeper-$ZK_VERSION /opt/zookeeper \
-    && mkdir -p /tmp/zookeeper
 RUN mkdir /var/run/sshd
+
+RUN apt-get update && \
+apt-get install -y curl openjdk-7-jre-headless wget openssh-server
+
+# https://www.apache.org/mirrors/dist.html
+RUN curl -fL http://www-eu.apache.org/dist/zookeeper/zookeeper-3.4.8/zookeeper-3.4.8.tar.gz | tar xzf - -C /opt && \
+mv /opt/zookeeper-3.4.8 /opt/zookeeper
 
 ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
 

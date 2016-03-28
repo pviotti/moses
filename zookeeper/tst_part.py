@@ -55,9 +55,7 @@ def setup_servers():
     
 def get_servers_addrs():
     # Get server addresses through Blockade
-    parser = block.setup_parser()
-    opts = parser.parse_args(args=["status"])
-    config = block.load_config(opts)
+    config = block.load_config(None)
     b = block.get_blockade(config)
     containers = b.status()
     
@@ -67,7 +65,8 @@ def get_servers_addrs():
         servers += c.ip_address
         servers += ":2181,"
         num_servers += 1
-    servers.strip(",")
+    servers = servers.strip(",")
+    print servers
 
 def setup_clients():
     logging.info("Setup clients...")
