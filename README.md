@@ -7,41 +7,35 @@ Experiments on network partitions with [Blockade][1], as in the [Jepsen][2] seri
 For the moment, the game is about:
 
  1. partitioning the network
- 2. issuing writes to cluster's servers on both sides of the partition
+ 2. issuing writes to servers on both sides of the partition
  3. healing the partition
  4. verifying that each acknowledged write's value is actually present into the store
-    by issuing read operations on random servers of the cluster
+    by invoking read operations on random servers of the cluster
 
 
  [1]: https://github.com/dcm-oss/blockade
  [2]: https://aphyr.com/tags/jepsen
 
 
-## Host machine setup
+## Setup
 
-All experiments have been performed on a single machine running Ubuntu 15.10.  
+Requirements:
+ 
+ * [Docker](https://docs.docker.com/engine/getstarted/step_one/) (tested with version 1.12)
+ * Blockade 0.3.0 (`sudo pip install blockade==0.3.0`)
 
-Follow the [instructions on Docker's website](https://docs.docker.com/linux/step_one/) to install Docker.  
 
-Preliminary setup:
-
-    sudo apt-get install python-pip sshpass 
-
-Blockade:
-
-    sudo pip install blockade
-
-Final check:
+Check the setup with the following commands:
 
     docker info
-    sudo blockade -h
+    blockade -h
 
 
 ## Usage
 
 Each folder contains the test files for a specific store. 
 Once in a certain folder, you can issue the following commands.  
-To build the needed Docker images and install dependencies:
+To build the Docker images and install the needed dependencies:
 
     make build
 
