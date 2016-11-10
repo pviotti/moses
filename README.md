@@ -19,26 +19,21 @@ For the moment, the game is about:
 
 ## Host machine setup
 
-All tests are performed on a single machine running Ubuntu 14.04.  
+All experiments have been performed on a single machine running Ubuntu 15.10.  
+
+Follow the [instructions on Docker's website](https://docs.docker.com/linux/step_one/) to install Docker.  
 
 Preliminary setup:
 
-    sudo apt-get install lxctl lxc python-pip sshpass 
-
-Docker:
-
-    sudo su
-    wget -qO- https://get.docker.com/ | sh
-    sudo usermod -aG docker ubuntu
+    sudo apt-get install python-pip sshpass 
 
 Blockade:
 
     sudo pip install blockade
-    sudo echo 'DOCKER_OPTS="-e lxc ${DOCKER_OPTS}"' >> /etc/default/docker
 
 Final check:
 
-    docker info # should mention LXC as execution driver
+    docker info
     sudo blockade -h
 
 
