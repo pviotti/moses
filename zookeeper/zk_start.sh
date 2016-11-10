@@ -15,7 +15,7 @@ done
 for i in $(seq 0 $end)
 do
     sshpass -p 'root' scp $SSH_OPTS zoo.cfg root@${ips[$i]}:/opt/zookeeper/conf/ 2>/dev/null
-    sshpass -p 'root' ssh $SSH_OPTS root@${ips[$i]} "mkdir -p /tmp/zookeeper; echo $(( $i + 1 )) > /tmp/zookeeper/myid" 2>/dev/null
+    sshpass -p 'root' ssh $SSH_OPTS root@${ips[$i]} "echo $(( $i + 1 )) > /tmp/myid" 2>/dev/null
     sshpass -p 'root' ssh $SSH_OPTS root@${ips[$i]} "/opt/zookeeper/bin/zkServer.sh start" 2>/dev/null
 done
 
