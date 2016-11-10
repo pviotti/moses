@@ -1,6 +1,6 @@
 # Moses vs Zookeeper
 
-Testing Zookeeper 3.4.6 against network faults.
+Testing Zookeeper 3.4.8 against network faults.
 
 
 ## Containers setup
