@@ -1,6 +1,6 @@
 build:
-	sudo apt-get install python-kazoo
-	docker build -t viotti/zk:v1 .
+	sudo apt-get install python-kazoo sshpass
+	docker build -t pviotti/zk:v1 .
 
 run:
 	python tst_part.py
