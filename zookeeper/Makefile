@@ -3,7 +3,7 @@ build:
 	docker build -t pviotti/zk:v1 .
 
 run:
-	python tst_part.py
+	python zk_part.py
 
 clean:
 	rm -f zoo.cfg
