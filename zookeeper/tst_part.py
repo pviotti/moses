@@ -44,21 +44,21 @@ def test():
     finally:
         shutdown()
         
+def _prepare_blockade_cmd(cmd):
+    parser = block.setup_parser()
+    return parser.parse_args(args=cmd)
+        
 def setup_servers():
     logging.info("Setup servers...")
     # Blockade up
-    parser = block.setup_parser()
-    opts = parser.parse_args(args=["up"])
-    block.cmd_up(opts)
+    block.cmd_up(_prepare_blockade_cmd(["up"]))
     # Zk start
     subp.call(["./zk_start.sh"])
     
 def get_servers_addrs():
     # Get server addresses through Blockade
-    parser = block.setup_parser()
-    opts = parser.parse_args(args=["up"])
     config = block.load_config(None)
-    b = block.get_blockade(config, opts)
+    b = block.get_blockade(config, _prepare_blockade_cmd(["up"]))
     containers = b.status()
     
     global servers
@@ -68,7 +68,7 @@ def get_servers_addrs():
         servers += ":2181,"
         num_servers += 1
     servers = servers.strip(",")
-    print servers
+    #print servers
 
 def setup_clients():
     logging.info("Setup clients...")
@@ -89,9 +89,7 @@ def write():
              "zk" + str(random.randint(1,num_servers)) )
     
     # print partition status
-    parser = block.setup_parser()
-    opts = parser.parse_args(args=["status"])
-    block.cmd_status(opts)
+    block.cmd_status(_prepare_blockade_cmd(["status"]))
     
     for i in p.map(_issue_writes, clients):
         pass
@@ -104,9 +102,7 @@ def write():
 def partition(srv):
     # Blockade partition
     logging.info("Partitioning " + srv)
-    parser = block.setup_parser()
-    opts = parser.parse_args(args=["partition", srv])
-    block.cmd_partition(opts)
+    block.cmd_partition(_prepare_blockade_cmd(["partition", srv]))
     
 def join_partition():
     # Blockade join
@@ -126,9 +122,9 @@ def _issue_writes(zkc):
                 global failed_writes
                 failed_writes += 1
             try:
-                logging.warning("Failed write on " + zkc._connection._socket.getpeername()[0])
+                logging.debug("Failed write on " + zkc._connection._socket.getpeername()[0])
             except: # at this point the socket object might be null
-                logging.warning("Failed write on some server")
+                logging.debug("Failed write on some server")
         else:
             test_db[key] = value.encode()
 
@@ -140,18 +136,16 @@ def read():
         assert data == test_db[key]
   
 def shutdown():
-    # Blocakde destroy
-    parser = block.setup_parser()
-    opts = parser.parse_args(args=["destroy"])
-    block.cmd_destroy(opts)
+    # Blockade destroy
+    block.cmd_destroy(_prepare_blockade_cmd(["destroy"]))
 
 def state_listener(state):
     if state == KazooState.LOST:
-        logging.warning("State: LOST")
+        logging.debug("State: LOST")
     elif state == KazooState.SUSPENDED:
-        logging.warning("State: SUSPENDED")
+        logging.debug("State: SUSPENDED")
     else:
-        logging.warning("State: CONNECTED")
+        logging.debug("State: CONNECTED")
 
 
 if __name__=="__main__":
